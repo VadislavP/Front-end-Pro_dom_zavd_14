@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
             saveTodos();
 
             // Clear the input field
-            // input.value = "";
+            input.value = "";
         }
     }
 
@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const span = document.createElement("span");
         span.classList.add("todo-item__description");
+
         span.textContent = description;
 
         const deleteBtn = document.createElement("button");
@@ -89,14 +90,27 @@ document.addEventListener("DOMContentLoaded", function () {
     function loadTodos() {
         const todos = JSON.parse(localStorage.getItem("todos")) || [];
 
-        todos.forEach(function (todo) {
-            const todoItem = createTodoItem(todo.description);
+        // Очищаем todosWrapper перед добавлением новых элементов
+        todosWrapper.innerHTML = "";
 
-            if (todo.checked) {
-                todoItem.classList.add("todo-item--checked");
-            }
+        if (todos.length > 0) {
+            // Если есть сохраненные задачи, добавляем их в список
+            todos.forEach(function (todo) {
+                const todoItem = createTodoItem(todo.description);
 
-            todosWrapper.appendChild(todoItem);
-        });
+                if (todo.checked) {
+                    todoItem.classList.add("todo-item--checked");
+                }
+
+                todosWrapper.appendChild(todoItem);
+            });
+        } else {
+            // В противном случае, добавляем начальный элемент
+            const initialTodoItem = createTodoItem("Text");
+            todosWrapper.appendChild(initialTodoItem);
+
+            // Save initial todo to localStorage
+            saveTodos();
+        }
     }
 });
